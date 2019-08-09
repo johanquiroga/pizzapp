@@ -110,6 +110,7 @@ handler.post = async req => {
     });
   }
 
+  // Populate cart items with current products data
   const [populateErr, populatedCart] = await to(
     populateCartItems(newUser.cart)
   );
@@ -121,6 +122,7 @@ handler.post = async req => {
     });
   }
 
+  // Calculate cart data (total amount, total items)
   const cart = helpers.calculateCartInfo(populatedCart);
 
   return helpers.createResponse({
@@ -155,6 +157,7 @@ handler.get = async req => {
     });
   }
 
+  // Populate cart items with current products data
   const [populateErr, populatedCart] = await to(populateCartItems(user.cart));
   if (populateErr || !populatedCart) {
     debug(populateErr);
@@ -164,6 +167,7 @@ handler.get = async req => {
     });
   }
 
+  // Calculate cart data (total amount, total items)
   const cart = helpers.calculateCartInfo(populatedCart);
 
   return helpers.createResponse({
@@ -248,6 +252,7 @@ handler.put = async req => {
     });
   }
 
+  // Populate cart items with current products data
   const [populateErr, populatedCart] = await to(
     populateCartItems(newUser.cart)
   );
@@ -259,6 +264,7 @@ handler.put = async req => {
     });
   }
 
+  // Calculate cart data (total amount, total items)
   const cart = helpers.calculateCartInfo(populatedCart);
 
   return helpers.createResponse({
@@ -332,6 +338,7 @@ handler.delete = async req => {
     });
   }
 
+  // Populate cart items with current products data
   const [populateErr, populatedCart] = await to(
     populateCartItems(newUser.cart)
   );
@@ -343,6 +350,7 @@ handler.delete = async req => {
     });
   }
 
+  // Calculate cart data (total amount, total items)
   const cart = helpers.calculateCartInfo(populatedCart);
 
   return helpers.createResponse({

@@ -72,6 +72,7 @@ handler.post = async req => {
     });
   }
 
+  // Calculate cart data (total amount, total items)
   const cart = helpers.calculateCartInfo(populatedCart);
 
   if (!cart.total) {
@@ -82,13 +83,13 @@ handler.post = async req => {
     });
   }
 
+  // Create a charge to the users card with stripe
   const [chargeErr, charge] = await to(
     stripe.createCharge({
       amount: cart.total,
       source: token,
     })
   );
-
   if (chargeErr || !charge) {
     debug(chargeErr);
     return helpers.createResponse({
@@ -125,6 +126,7 @@ handler.post = async req => {
   // Clean up - clear the users cart, delete CartItems
   user.cart = [];
 
+  // Generate a receipt for the newly created order
   const receiptData = {
     purchase_date: order.createdAt.toUTCString(),
     name: `${user.firstName} ${user.lastName}`,
@@ -140,6 +142,7 @@ handler.post = async req => {
   if (parseErr || !receipt.html || !receipt.text) {
     debug(parseErr, receipt);
   } else {
+    // Send the receipt to the user registered email
     mailgun.sendMessage({
       to: user.email,
       subject: 'Receipt from Pizzapp',
@@ -203,6 +206,7 @@ handler.get = async req => {
       });
     }
 
+    // Only allow users to see details of their own orders
     if (order.email !== email) {
       return helpers.createResponse({
         status: 403,
@@ -233,7 +237,6 @@ handler.get = async req => {
     }
     return order;
   });
-
   const [populateErr, orders] = await to(Promise.all(populateOrders));
   if (populateErr || !orders) {
     debug(populateErr);
